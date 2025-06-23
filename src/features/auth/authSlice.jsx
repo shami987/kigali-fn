@@ -5,7 +5,7 @@ export const login = createAsyncThunk(
     'auth/login',
     async ({ email, password }, { rejectWithValue }) => {
         try {
-            const response = await fetch('http://localhost:3000/api/auth/login', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,7 +37,7 @@ export const register = createAsyncThunk(
     'auth/register',
     async ({ username, email, password, role }, { rejectWithValue }) => {
         try {
-            const response = await fetch('http://localhost:3000/api/auth/register', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -70,7 +70,7 @@ export const logout = createAsyncThunk(
         try {
             const token = getState().auth.token;
             // Optionally call the backend logout endpoint (though token invalidation is client-side for JWT)
-            const response = await fetch('http://localhost:3000/api/auth/logout', {
+            const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/auth/logout`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
