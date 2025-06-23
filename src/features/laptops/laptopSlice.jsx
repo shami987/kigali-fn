@@ -44,7 +44,7 @@ const fetchWithAuth = async (url, options = {}, { rejectWithValue, dispatch }) =
 export const fetchLaptops = createAsyncThunk(
     'laptops/fetchLaptops',
     async (_, { rejectWithValue, dispatch }) => {
-        return fetchWithAuth('http://localhost:3000/api/laptops', { method: 'GET' }, { rejectWithValue, dispatch });
+        return fetchWithAuth(`${import.meta.env.VITE_BACKEND_URL}/api/laptops`, { method: 'GET' }, { rejectWithValue, dispatch });
     }
 );
 
@@ -52,7 +52,7 @@ export const addLaptop = createAsyncThunk(
     'laptops/addLaptop',
     async (laptopData, { rejectWithValue, dispatch }) => {
         // laptopData should now include 'model'
-        return fetchWithAuth('http://localhost:3000/api/laptops', {
+        return fetchWithAuth(`${import.meta.env.VITE_BACKEND_URL}/api/laptops`, {
             method: 'POST',
             body: JSON.stringify(laptopData),
         }, { rejectWithValue, dispatch });
@@ -63,7 +63,7 @@ export const updateLaptop = createAsyncThunk(
     'laptops/updateLaptop',
     async ({ id, laptopData }, { rejectWithValue, dispatch }) => {
         // laptopData now expects name, serialNumber, model (as per backend schema)
-        return fetchWithAuth(`http://localhost:3000/api/laptops/${id}`, {
+        return fetchWithAuth(`${import.meta.env.VITE_BACKEND_URL}/api/laptops/${id}`, {
             method: 'PUT',
             body: JSON.stringify(laptopData),
         }, { rejectWithValue, dispatch });
@@ -73,7 +73,7 @@ export const updateLaptop = createAsyncThunk(
 export const deleteLaptop = createAsyncThunk(
     'laptops/deleteLaptop',
     async (id, { rejectWithValue, dispatch }) => {
-        return fetchWithAuth(`http://localhost:3000/api/laptops/${id}`, {
+        return fetchWithAuth(`${import.meta.env.VITE_BACKEND_URL}/api/laptops/${id}`, {
             method: 'DELETE',
         }, { rejectWithValue, dispatch });
     }
@@ -82,7 +82,7 @@ export const deleteLaptop = createAsyncThunk(
 export const distributeLaptop = createAsyncThunk(
     'laptops/distributeLaptop',
     async (distributionData, { rejectWithValue, dispatch }) => {
-        return fetchWithAuth('http://localhost:3000/api/laptops/distribute', {
+        return fetchWithAuth(`${import.meta.env.VITE_BACKEND_URL}/api/laptops/distribute`, {
             method: 'POST',
             body: JSON.stringify(distributionData),
         }, { rejectWithValue, dispatch });
@@ -92,7 +92,7 @@ export const distributeLaptop = createAsyncThunk(
 export const returnLaptop = createAsyncThunk(
     'laptops/returnLaptop',
     async ({ laptopId, returnedReason }, { rejectWithValue, dispatch }) => {
-        return fetchWithAuth('http://localhost:3000/api/laptops/return', {
+        return fetchWithAuth(`${import.meta.env.VITE_BACKEND_URL}/api/laptops/return`, {
             method: 'POST',
             body: JSON.stringify({ laptopId, returnedReason }),
         }, { rejectWithValue, dispatch });
