@@ -202,7 +202,7 @@ const DistributeLaptopForm = () => {
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-purple-500 transition duration-200"
                                 value={userEmail}
                                 onChange={(e) => setUserEmail(e.target.value)}
-                                required
+                                
                             />
                         </div>
                         <div className="mb-4">

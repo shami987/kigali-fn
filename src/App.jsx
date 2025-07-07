@@ -1,84 +1,82 @@
-// App.jsx
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
 
-// Import all your component views
+// Import components
 import HomePage from './components/HomePage';
 import AddLaptopForm from './components/AddLaptopForm';
 import DistributeLaptopForm from './components/DistributeLaptopForm';
 import ReturnLaptopForm from './components/ReturnLaptopForm';
-import LaptopList from './components/LaptopList'; // Assuming this lists ALL laptops (distributed and not)
-import DistributedLaptopsList from './components/DistributedLaptopsList'; // This lists ONLY distributed laptops
+import LaptopList from './components/LaptopList';
+import DistributedLaptopsList from './components/DistributedLaptopsList';
 import LoginForm from './components/LoginForm';
 import EditLaptopForm from './components/EditLaptopForm';
 import RegisterForm from './components/RegisterForm';
 
-
-// Import setAppView action from your laptopSlice
 import { setAppView } from './features/laptops/laptopSlice';
+import { logout } from './features/auth/authSlice';
 
 function App() {
-  // Select the current application view from the Redux store
   const appView = useSelector((state) => state.laptops.appView);
-  // Select authentication status from the Redux auth slice
   const { isAuthenticated } = useSelector((state) => state.auth);
-  // Get the dispatch function
   const dispatch = useDispatch();
 
-  // Effect to handle initial authentication check and set view to login if not authenticated
+  // Global token validation
   useEffect(() => {
-    // If user is not authenticated and the current view is not already 'login',
-    // dispatch setAppView to 'login' to force the login screen.
-    if (!isAuthenticated && appView !== 'login') {
-      dispatch(setAppView('login'));
+    const token = localStorage.getItem('token');
+    
+    if (!isAuthenticated || !token) {
+      // Only redirect if not already on login/register pages
+      if (appView !== 'login' && appView !== 'register') {
+        if (!token) {
+          toast.error('Please log in to continue.');
+        }
+        dispatch(logout()); // Clear auth state
+        dispatch(setAppView('login'));
+      }
     }
-  }, [isAuthenticated, appView, dispatch]); // Dependencies ensure this effect runs when these values change
+  }, [isAuthenticated, appView, dispatch]);
 
-  let content; // Variable to hold the component to be rendered
+  let content;
 
-  // Use a switch statement to conditionally render components based on the 'appView' state
   switch (appView) {
     case 'home':
       content = <HomePage />;
       break;
-    case 'addLaptop': // View for adding a new laptop
+    case 'addLaptop':
       content = <AddLaptopForm />;
       break;
-    case 'distributeLaptopForm': // View for the laptop distribution form (corrected view name)
+    case 'distributeLaptopForm':
       content = <DistributeLaptopForm />;
       break;
-     case 'editLaptop': // This matches the 'editLaptop' string dispatched from LaptopList
+    case 'editLaptop':
       content = <EditLaptopForm />;
       break;
-    case 'returnLaptop': // View for the laptop return form
+    case 'returnLaptop':
       content = <ReturnLaptopForm />;
       break;
-    case 'listLaptops': // View for listing all laptops
+    case 'listLaptops':
       content = <LaptopList />;
       break;
-    case 'distributedLaptops': // View for listing only distributed laptops
+    case 'distributedLaptops':
       content = <DistributedLaptopsList />;
       break;
-    case 'register': 
+    case 'register':
       content = <RegisterForm />;
       break;
-  
-    case 'login': // View for the login form
+    case 'login':
       content = <LoginForm />;
       break;
     default:
-      // Default case if appView is not recognized, or for initial load before useEffect
       content = <HomePage />;
       break;
   }
 
   return (
     <div className="App">
-      {/* Render the selected component */}
       {content}
-      {/* ToastContainer for displaying notifications */}
       <ToastContainer
         position="bottom-right"
         autoClose={5000}

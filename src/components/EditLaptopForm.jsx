@@ -9,8 +9,10 @@ import {
 } from '../features/laptops/laptopSlice';
 import { Laptop, Save, X } from 'lucide-react'; // Changed ArrowLeftCircle to X
 import { toast } from 'react-toastify';
+import { useAuthCheck } from '../hooks/useAuthCheck';
 
 const EditLaptopForm = () => {
+  useAuthCheck();
   const dispatch = useDispatch();
   const {
     items: laptops,
@@ -58,7 +60,7 @@ const EditLaptopForm = () => {
       dispatch(setAppView('listLaptops'));
       dispatch(setEditingLaptopId(null));
     }
-  }, [laptopToEdit, editingLaptopId, fetchStatus, dispatch]);
+  }, [laptopToEdit, editingLaptopId, fetchStatus, dispatch, error]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -95,7 +97,7 @@ const EditLaptopForm = () => {
       dispatch(setEditingLaptopId(null));
       dispatch(setAppView('listLaptops'));
     } catch (err) {
-      toast.error(error || err.message || 'Failed to update laptop. Please try again.'); // Improved error message
+      toast.error(error || err.message || 'Failed to update laptop. Please try again.');
       console.error('Failed to update laptop:', err);
     } finally {
       setIsSaving(false); // Always reset saving state
