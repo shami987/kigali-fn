@@ -8,25 +8,26 @@ const getToken = () => localStorage.getItem('token');
 // Helper function for API calls with auth
 const fetchWithAuth = async (url, options = {}, { rejectWithValue, dispatch }) => {
     const token = getToken();
+    
+    // Check if token exists before making the request
+    if (!token) {
+        dispatch(setErrorMessage('No authentication token found. Please log in.'));
+        return rejectWithValue('No authentication token found');
+    }
+    
     const headers = {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
         ...options.headers,
     };
-    if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-    }
 
     try {
         const response = await fetch(url, { ...options, headers });
         const data = await response.json();
 
-        if (response.status === 401) { // Unauthorized
-            dispatch(setErrorMessage('Session expired or unauthorized. Please log in again.'));
-            // If you want to force logout on 401:
-            // if (dispatch && typeof logout === 'function') { // Check if logout is imported and callable
-            //     dispatch(logout());
-            // }
-            return rejectWithValue(data.message || 'Unauthorized');
+        if (response.status === 401) {
+            dispatch(setErrorMessage('Unauthorized - Session expired'));
+            return rejectWithValue('Unauthorized - Session expired');
         }
 
         if (!response.ok) {
@@ -38,6 +39,8 @@ const fetchWithAuth = async (url, options = {}, { rejectWithValue, dispatch }) =
         return rejectWithValue(error.message || 'Network error');
     }
 };
+
+
 
 // Async Thunks for Laptop Operations
 

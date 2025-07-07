@@ -32,7 +32,6 @@ const HomePage = () => {
     };
 
     const handleLogout = () => {
-        console.log('Logout clicked'); // Good for debugging
         dispatch(logout());
         dispatch(setAppView('login')); // Navigate to login after logout
     };
