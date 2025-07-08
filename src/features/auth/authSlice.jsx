@@ -13,7 +13,8 @@ export const login = createAsyncThunk(
                 body: JSON.stringify({ email, password }),
             });
 
-            const data = await response.json();
+            const text = await response.text();
+            const data = text ? JSON.parse(text) : {};
 
             if (!response.ok) {
                 // If response is not ok, throw an error with the message from the backend
@@ -78,7 +79,8 @@ export const logout = createAsyncThunk(
                 },
             });
 
-            const data = await response.json();
+            const text = await response.text();
+            const data = text ? JSON.parse(text) : {}; // parse only if not empty
 
             if (!response.ok) {
                 // Even if backend fails, clear client-side state
